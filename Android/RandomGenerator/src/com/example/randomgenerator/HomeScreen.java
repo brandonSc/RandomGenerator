@@ -7,10 +7,13 @@ import org.w3c.dom.Text;
 
 import android.os.Bundle;
 import android.app.Activity;
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 /**
@@ -21,7 +24,8 @@ public class HomeScreen extends Activity
 	public static int ANIM_CYCLES = 1;
 	public static int ANIM_DURATION = 100;
 	
-	protected TextView msgText; 		// temp display for random results
+	protected ImageView imgView; 	// temp image view to display a taken photo
+	protected TextView msgText; 	// temp display for random results
 	protected Button flipButton; 	// random heads or tails
 	protected Button rollButton; 	// random 1-6, modifiable # of dice
 	protected Button shuffleButton; // shuffle the order of a list of pics or text
@@ -39,6 +43,7 @@ public class HomeScreen extends Activity
 		shuffleButton = (Button)findViewById(R.id.button2);
 		divideButton = (Button)findViewById(R.id.button4);
 		msgText = (TextView)findViewById(R.id.textView1);
+		imgView = (ImageView)findViewById(R.id.imageView1);
 		
 		/* setup UI event handlers */
 		flipButton.setOnClickListener(new OnClickListener() {
@@ -89,6 +94,7 @@ public class HomeScreen extends Activity
 						for( int i=0; i<ANIM_CYCLES; i++ ){
 							try {
 								setMsgText(msg0);
+								
 								Thread.sleep(ANIM_DURATION);
 								setMsgText(msg1);
 								Thread.sleep(ANIM_DURATION);
@@ -110,8 +116,29 @@ public class HomeScreen extends Activity
 			}
 		});
 		
+		shuffleButton.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				openCamera();
+			}
+		});
+		
 	}
 	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+      // TODO Auto-generated method stub
+      super.onActivityResult(requestCode, resultCode, data);
+      Bitmap bp = (Bitmap) data.getExtras().get("data");
+      imgView.setImageBitmap(bp);
+   }
+	
+	public void openCamera(){
+		Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+		startActivityForResult(intent, 0);
+	}
+	
+		
 	public void setMsgText( final String msg ){
 		runOnUiThread(new Runnable(){
 			@Override
