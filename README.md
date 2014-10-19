@@ -1,5 +1,5 @@
-RandomGenerator
-===============
+Randomizer
+==========
 A simple app to generate random decisions you may encounter in your everyday life.
 - Flip a coin
 - Roll a dice
